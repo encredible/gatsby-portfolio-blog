@@ -4,10 +4,10 @@ const { createFilePath } = require(`gatsby-source-filesystem`)
 exports.createPages = async ({ graphql, actions, reporter }) => {
   const { createPage } = actions
 
-  // Define a template for blog post
+  // Define a template for blog-content post
   const blogPost = path.resolve(`./src/templates/blog-post.js`)
 
-  // Get all markdown blog posts sorted by date
+  // Get all markdown blog-content posts sorted by date
   const result = await graphql(
     `
       {
@@ -36,8 +36,8 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
 
   const posts = result.data.allMarkdownRemark.nodes
 
-  // Create blog posts pages
-  // But only if there's at least one markdown file found at "content/blog" (defined in gatsby-config.js)
+  // Create blog-content posts pages
+  // But only if there's at least one markdown file found at "content/blog-content" (defined in gatsby-config.js)
   // `context` is available in the template as a prop and as a variable in GraphQL
 
   if (posts.length > 0) {
@@ -80,7 +80,7 @@ exports.createSchemaCustomization = ({ actions }) => {
 
   // Also explicitly define the Markdown frontmatter
   // This way the "MarkdownRemark" queries will return `null` even when no
-  // blog posts are stored inside "content/blog" instead of returning an error
+  // blog-content posts are stored inside "content/blog-content" instead of returning an error
   createTypes(`
     type SiteSiteMetadata {
       author: Author

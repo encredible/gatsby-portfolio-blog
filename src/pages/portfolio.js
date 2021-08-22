@@ -4,8 +4,9 @@ import { Link, graphql } from "gatsby"
 import Bio from "../components/bio"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
+import { GatsbyImage, getImage, StaticImage } from "gatsby-plugin-image"
 
-const BlogIndex = ({ data, location }) => {
+const PortfoioIndex = ({ data, location }) => {
   const siteTitle = data.site.siteMetadata?.title || `Title`
   const posts = data.allMarkdownRemark.nodes
 
@@ -24,13 +25,19 @@ const BlogIndex = ({ data, location }) => {
 
   return (
     <Layout location={location} title={siteTitle}>
-      <Seo title="All posts" />
-      <ol style={{ listStyle: `none` }}>
+      <Seo title="All portfolios" />
+      <ul
+        className="grid no-underline gap-5"
+        style={{
+          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+        }}
+      >
         {posts
-          .filter(post => post.fields.slug === "/portfolio-content/")
+          .filter(post => post.fields.slug.startsWith("/portfolio-content/"))
           .map(post => {
             const title = post.frontmatter.title || post.fields.slug
-
+            console.log(post.frontmatter.img)
+            const image = getImage(post.frontmatter.img)
             return (
               <li key={post.fields.slug}>
                 <article
@@ -39,11 +46,12 @@ const BlogIndex = ({ data, location }) => {
                   itemType="http://schema.org/Article"
                 >
                   <header>
-                    <h2>
-                      <Link to={post.fields.slug} itemProp="url">
+                    <Link to={post.fields.slug} itemProp="url">
+                      <GatsbyImage image={image} />
+                      <h2>
                         <span itemProp="headline">{title}</span>
-                      </Link>
-                    </h2>
+                      </h2>
+                    </Link>
                     <small>{post.frontmatter.date}</small>
                   </header>
                   <section>
@@ -58,12 +66,12 @@ const BlogIndex = ({ data, location }) => {
               </li>
             )
           })}
-      </ol>
+      </ul>
     </Layout>
   )
 }
 
-export default BlogIndex
+export default PortfoioIndex
 
 export const pageQuery = graphql`
   query {
@@ -82,6 +90,11 @@ export const pageQuery = graphql`
           date(formatString: "MMMM DD, YYYY")
           title
           description
+          img {
+            childImageSharp {
+              gatsbyImageData(layout: FULL_WIDTH)
+            }
+          }
         }
       }
     }

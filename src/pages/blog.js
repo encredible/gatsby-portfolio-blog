@@ -28,7 +28,7 @@ const BlogIndex = ({ data, location }) => {
       <Seo title="All posts" />
       <ol style={{ listStyle: `none` }}>
         {posts
-          .filter(post => post.fields.slug === "/blog-content/")
+          .filter(post => post.fields.slug.startsWith("/blog-content/"))
           .map(post => {
             const title = post.frontmatter.title || post.fields.slug
 
